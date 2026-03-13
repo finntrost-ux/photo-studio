@@ -1,112 +1,115 @@
 import Link from "next/link";
 import Image from "next/image";
 import { projects } from "../data/projects";
+import ProjectCard from "./components/ProjectCard";
+import FadeIn from "./components/FadeIn";
 
 export default function Home() {
-  return (
-    <div className="relative">
-      <div className="pointer-events-none absolute inset-x-0 -top-24 -z-10 h-72 bg-[radial-gradient(closest-side,rgba(0,0,0,.06),transparent)] dark:bg-[radial-gradient(closest-side,rgba(255,255,255,.10),transparent)]" />
+  const featured = projects[0];
 
-      <section className="grid gap-10 md:grid-cols-12 md:items-end">
-        <div className="md:col-span-7">
-          <p className="text-xs font-medium tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
-            PHOTO · STORIES · TRAVEL
-          </p>
-          <h1 className="mt-3 text-4xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50 sm:text-5xl">
-            Comfort Studios
-          </h1>
-          <p className="mt-4 max-w-xl text-base leading-7 text-zinc-600 dark:text-zinc-300">
-            A minimal photoblog with clean typography, generous whitespace, and
-            image-first storytelling.
-          </p>
-          <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-            <Link
-              href="/portfolio"
-              className="inline-flex h-11 items-center justify-center rounded-full bg-zinc-950 px-6 text-sm font-medium text-white transition-colors hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
-            >
-              View portfolio
-            </Link>
-            <Link
-              href="/contact"
-              className="inline-flex h-11 items-center justify-center rounded-full border border-black/10 bg-white px-6 text-sm font-medium text-zinc-950 transition-colors hover:bg-zinc-50 dark:border-white/15 dark:bg-black dark:text-zinc-50 dark:hover:bg-white/5"
-            >
-              Book a shoot
-            </Link>
-          </div>
+  return (
+    <div className="space-y-16 sm:space-y-20">
+      {/* Fullscreen hero */}
+      <section className="relative -mx-4 -mt-2 h-[calc(100vh-4rem)] overflow-hidden rounded-none bg-neutral-900 sm:-mx-6 sm:rounded-3xl">
+        <div className="relative h-full w-full">
+          {featured && (
+            <Image
+              src={featured.cover.src}
+              alt={featured.cover.alt}
+              fill
+              priority
+              className="object-cover"
+              sizes="100vw"
+            />
+          )}
+          <div className="absolute inset-0 bg-neutral-950/55 mix-blend-multiply" />
         </div>
 
-        <div className="md:col-span-5">
-          <div className="relative overflow-hidden rounded-3xl border border-black/5 bg-[linear-gradient(135deg,rgba(0,0,0,.04),transparent)] p-5 dark:border-white/10 dark:bg-[linear-gradient(135deg,rgba(255,255,255,.10),transparent)]">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-zinc-100 dark:bg-zinc-900">
-              <Image
-                src={projects[0]?.cover.src ?? "/window.svg"}
-                alt={projects[0]?.cover.alt ?? "Featured cover"}
-                fill
-                className="object-contain p-14 opacity-70 dark:opacity-80"
-                priority
-              />
-            </div>
-            <div className="mt-4 flex items-center justify-between gap-3">
-              <div className="min-w-0">
-                <p className="truncate text-sm font-medium text-zinc-950 dark:text-zinc-50">
-                  Featured: {projects[0]?.title ?? "Collection"}
-                </p>
-                <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                  {projects[0]?.year ?? ""} ·{" "}
-                  {(projects[0]?.tags ?? []).slice(0, 2).join(" / ")}
-                </p>
+        <div className="pointer-events-none absolute inset-0 flex flex-col justify-between px-6 pb-10 pt-20 sm:px-10 sm:pb-14 sm:pt-24 lg:px-16">
+          <div className="flex justify-between text-xs font-medium uppercase tracking-[0.22em] text-neutral-300">
+            <span>Comfort Studios — Finn Trost</span>
+            <span>Berlin · Kreuzberg</span>
+          </div>
+
+          <div className="space-y-6 sm:space-y-8">
+            <FadeIn>
+              <p className="text-sm uppercase tracking-[0.28em] text-neutral-300">
+                Documentary moments · Urban poetry
+              </p>
+            </FadeIn>
+            <FadeIn delay={120}>
+              <h1 className="max-w-3xl text-balance text-4xl font-semibold tracking-tight text-neutral-50 sm:text-5xl lg:text-6xl">
+                A Berlin-based documentary and street photography portfolio.
+              </h1>
+            </FadeIn>
+            <FadeIn delay={220}>
+              <div className="flex flex-wrap items-center gap-4 text-xs text-neutral-200">
+                <span>Documentary · Street · Editorial</span>
+                <span className="h-px w-10 bg-neutral-400/70" />
+                {featured && (
+                  <span className="truncate">
+                    Latest: {featured.title} · {featured.year}
+                  </span>
+                )}
               </div>
-              <Link
-                href={projects[0] ? `/portfolio/${projects[0].slug}` : "/portfolio"}
-                className="shrink-0 rounded-full px-3 py-2 text-xs font-medium text-zinc-700 transition-colors hover:bg-black/5 hover:text-zinc-950 dark:text-zinc-300 dark:hover:bg-white/10 dark:hover:text-zinc-50"
-              >
-                Open
-              </Link>
-            </div>
+            </FadeIn>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <FadeIn delay={260}>
+              <div className="flex gap-3 text-xs text-neutral-200">
+                <Link
+                  href="/portfolio"
+                  className="inline-flex items-center rounded-full border border-neutral-200/70 bg-neutral-50/10 px-4 py-2 font-medium uppercase tracking-[0.16em] text-neutral-50 backdrop-blur-sm transition-colors hover:bg-neutral-50 hover:text-neutral-900"
+                >
+                  View portfolio
+                </Link>
+                <Link
+                  href="/about"
+                  className="inline-flex items-center rounded-full border border-neutral-500/60 px-4 py-2 font-medium uppercase tracking-[0.16em] text-neutral-100/90 transition-colors hover:border-neutral-100 hover:bg-neutral-100 hover:text-neutral-900"
+                >
+                  About the work
+                </Link>
+              </div>
+            </FadeIn>
+
+            <a
+              href="#projects"
+              className="group hidden flex-col items-center gap-2 text-[11px] font-medium uppercase tracking-[0.2em] text-neutral-300 sm:flex"
+            >
+              Scroll
+              <span className="h-12 w-px origin-top scale-y-100 bg-neutral-400/80 transition-transform duration-500 group-hover:scale-y-125" />
+            </a>
           </div>
         </div>
       </section>
 
-      <section className="mt-14">
-        <div className="flex items-baseline justify-between gap-6">
-          <h2 className="text-lg font-semibold tracking-tight text-zinc-950 dark:text-zinc-50">
-            Latest collections
-          </h2>
-          <Link
-            href="/portfolio"
-            className="text-sm text-zinc-600 underline decoration-black/20 transition-colors hover:text-zinc-950 dark:text-zinc-300 dark:decoration-white/20 dark:hover:text-zinc-50"
-          >
-            See all
-          </Link>
-        </div>
-
-        <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {projects.slice(0, 3).map((project) => (
+      {/* Editorial grid */}
+      <section id="projects" className="space-y-6">
+        <FadeIn>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-xs font-medium uppercase tracking-[0.24em] text-neutral-500">
+                Portfolio
+              </p>
+              <h2 className="mt-1 text-2xl font-semibold tracking-tight text-neutral-950 dark:text-neutral-50">
+                Projects
+              </h2>
+            </div>
             <Link
-              key={project.slug}
-              href={`/portfolio/${project.slug}`}
-              className="group overflow-hidden rounded-2xl border border-black/5 bg-white transition-colors hover:bg-zinc-50 dark:border-white/10 dark:bg-black dark:hover:bg-white/5"
+              href="/portfolio"
+              className="text-xs font-medium uppercase tracking-[0.18em] text-neutral-600 underline decoration-neutral-300/80 underline-offset-4 transition-colors hover:text-neutral-900"
             >
-              <div className="relative aspect-[4/3] bg-zinc-100 dark:bg-zinc-900">
-                <Image
-                  src={project.cover.src}
-                  alt={project.cover.alt}
-                  fill
-                  className="object-contain p-12 opacity-70 transition-opacity group-hover:opacity-90 dark:opacity-80"
-                />
-              </div>
-              <div className="p-5">
-                <p className="text-sm font-medium text-zinc-950 dark:text-zinc-50">
-                  {project.title}
-                </p>
-                <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-                  {project.year} · {project.tags.join(" / ")}
-                </p>
-                <p className="mt-3 line-clamp-2 text-sm leading-6 text-zinc-600 dark:text-zinc-300">
-                  {project.intro}
-                </p>
-              </div>
+              View all projects
             </Link>
+          </div>
+        </FadeIn>
+
+        <div className="mt-2 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {projects.map((project, index) => (
+            <FadeIn key={project.slug} delay={index * 60}>
+              <ProjectCard project={project} index={index} />
+            </FadeIn>
           ))}
         </div>
       </section>

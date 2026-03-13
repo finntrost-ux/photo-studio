@@ -1,6 +1,7 @@
-import { projects } from "../../../data/projects";
 import Image from "next/image";
 import Link from "next/link";
+import { projects } from "../../../data/projects";
+import FadeIn from "../../components/FadeIn";
 
 export default function ProjectPage({ params }: { params: { slug: string } }) {
   const { slug } = params;
@@ -10,15 +11,15 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
   if (!project) {
     return (
       <div className="py-16">
-        <p className="text-sm text-zinc-600 dark:text-zinc-300">
+        <p className="text-sm text-neutral-600 dark:text-neutral-300">
           This collection doesn’t exist.
         </p>
-        <h1 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50">
+        <h1 className="mt-2 text-2xl font-semibold tracking-tight text-neutral-950 dark:text-neutral-50">
           Project not found
         </h1>
         <Link
           href="/portfolio"
-          className="mt-6 inline-flex rounded-full border border-black/10 px-4 py-2 text-sm font-medium text-zinc-900 transition-colors hover:bg-black/5 dark:border-white/15 dark:text-zinc-50 dark:hover:bg-white/10"
+          className="mt-6 inline-flex rounded-full border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-900 transition-colors hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-50 dark:hover:bg-neutral-900"
         >
           Back to portfolio
         </Link>
@@ -27,70 +28,67 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
   }
 
   return (
-    <article className="space-y-10">
-      <header className="space-y-4">
-        <Link
-          href="/portfolio"
-          className="inline-flex items-center gap-2 text-sm text-zinc-600 underline decoration-black/20 transition-colors hover:text-zinc-950 dark:text-zinc-300 dark:decoration-white/20 dark:hover:text-zinc-50"
-        >
-          Back to portfolio
-        </Link>
+    <article className="space-y-10 sm:space-y-14">
+      <FadeIn>
+        <header className="space-y-6">
+          <Link
+            href="/portfolio"
+            className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.18em] text-neutral-600 underline decoration-neutral-300/80 underline-offset-4 transition-colors hover:text-neutral-900"
+          >
+            Back to portfolio
+          </Link>
 
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <h1 className="text-4xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50">
-              {project.title}
-            </h1>
-            <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
-              {project.year} · {project.tags.join(" / ")}
-            </p>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-xs font-medium uppercase tracking-[0.24em] text-neutral-500">
+                {project.location}
+              </p>
+              <h1 className="mt-2 text-3xl font-semibold tracking-tight text-neutral-950 dark:text-neutral-50 sm:text-4xl">
+                {project.title}
+              </h1>
+              <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
+                {project.year} · {project.tags.join(" / ")}
+              </p>
+            </div>
           </div>
-        </div>
 
-        <p className="max-w-2xl text-base leading-7 text-zinc-600 dark:text-zinc-300">
-          {project.intro}
-        </p>
-      </header>
-
-      <section className="overflow-hidden rounded-3xl border border-black/5 bg-zinc-100 dark:border-white/10 dark:bg-zinc-900">
-        <div className="relative aspect-[16/9]">
-          <Image
-            src={project.cover.src}
-            alt={project.cover.alt}
-            fill
-            priority
-            className="object-contain p-16 opacity-80"
-          />
-        </div>
-      </section>
-
-      <section className="space-y-4">
-        <div className="flex items-baseline justify-between gap-6">
-          <h2 className="text-lg font-semibold tracking-tight text-zinc-950 dark:text-zinc-50">
-            Gallery
-          </h2>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400">
-            {project.gallery.length} images
+          <p className="max-w-2xl text-base leading-7 text-neutral-600 dark:text-neutral-300">
+            {project.intro}
           </p>
-        </div>
+        </header>
+      </FadeIn>
 
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {project.gallery.map((img, idx) => (
-            <div
-              key={`${img.src}-${idx}`}
-              className="overflow-hidden rounded-2xl border border-black/5 bg-white dark:border-white/10 dark:bg-black"
-            >
-              <div className="relative aspect-[4/3] bg-zinc-100 dark:bg-zinc-900">
+      <section className="-mx-4 space-y-8 sm:-mx-6 sm:space-y-10">
+        {project.images.map((image, index) => {
+          const isFull = image.layout === "full";
+          const isWide = image.layout === "wide";
+
+          let wrapperClasses =
+            "relative w-full overflow-hidden bg-neutral-200 dark:bg-neutral-900";
+
+          if (isFull) {
+            wrapperClasses += " h-[70vh] min-h-[320px]";
+          } else if (isWide) {
+            wrapperClasses += " mx-auto max-w-5xl h-[60vh] min-h-[280px]";
+          } else {
+            wrapperClasses += " mx-auto max-w-3xl h-[52vh] min-h-[260px]";
+          }
+
+          return (
+            <FadeIn key={image.src} delay={index * 80}>
+              <div className={wrapperClasses}>
                 <Image
-                  src={img.src}
-                  alt={img.alt}
+                  src={image.src}
+                  alt={image.alt}
                   fill
-                  className="object-contain p-12 opacity-70"
+                  className="object-cover"
+                  sizes="100vw"
+                  priority={index === 0}
                 />
               </div>
-            </div>
-          ))}
-        </div>
+            </FadeIn>
+          );
+        })}
       </section>
     </article>
   );
